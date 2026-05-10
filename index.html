@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrant Tasks</title>
+    <style>
+        /* 1. VIBRANT STYLING (CSS) */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Vibrant Gradient Background */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h2 { color: #4a4a4a; margin-bottom: 20px; font-size: 2rem; }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 25px; }
+
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: #667eea; }
+
+        .add-btn {
+            background: #ff4b2b;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .add-btn:hover { transform: scale(1.05); }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; }
+        
+        th {
+            text-align: left;
+            padding: 10px;
+            color: #764ba2;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        td { padding: 15px 10px; border-bottom: 1px solid #f9f9f9; }
+
+        /* Dynamic Classes */
+        .task-text { font-weight: 500; color: #333; }
+        .completed { text-decoration: line-through; color: #aaa; }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .pending { background: #fff3cd; color: #856404; }
+        .done { background: #d4edda; color: #155724; }
+
+        .action-btn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin: 0 5px;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌟 Vibrant Tasks</h2>
+    
+    <div class="input-group">
+        <input type="text" id="taskInput" placeholder="What's your next goal?">
+        <button class="add-btn" onclick="addTask()">ADD</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="taskTable">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    // 2. SIMPLE LOGIC (JavaScript)
+    let tasks = JSON.parse(localStorage.getItem('vibrantTasks')) || [];
+
+    function render() {
+        const tableBody = document.getElementById('taskTable');
+        tableBody.innerHTML = '';
+
+        tasks.forEach((task, index) => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td class="task-text ${task.completed ? 'completed' : ''}">${task.text}</td>
+                    <td>
+                        <span class="status-badge ${task.completed ? 'done' : 'pending'}">
+                            ${task.completed ? 'Completed' : 'Pending'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn" onclick="toggleTask(${index})">✅</button>
+                        <button class="action-btn" onclick="deleteTask(${index})">🗑️</button>
+                    </td>
+                </tr>
+            `;
+        });
+        localStorage.setItem('vibrantTasks', JSON.stringify(tasks));
+    }
+
+    function addTask() {
+        const input = document.getElementById('taskInput');
+        if (input.value.trim() === "") return;
+        tasks.push({ text: input.value, completed: false });
+        input.value = '';
+        render();
+    }
+
+    function toggleTask(index) {
+        tasks[index].completed = !tasks[index].completed;
+        render();
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        render();
+    }
+
+    // Load tasks on startup
+    render();
+</script>
+
+</body>
+</html>
